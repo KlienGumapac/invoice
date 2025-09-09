@@ -11,9 +11,9 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="size-8 rounded-md bg-primary/10 grid place-items-center">
-              <span className="text-primary font-bold">IV</span>
+              <span className="text-primary font-bold">QB</span>
             </div>
-            <span className="font-semibold tracking-tight">In-Voice</span>
+            <span className="font-semibold tracking-tight">QuickBill</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <Link href="#features" className="hover:text-foreground transition-colors">Features</Link>
@@ -33,7 +33,7 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-6 pt-20 pb-16 grid md:grid-cols-2 gap-10 items-center">
+        <div className="mx-auto max-w-6xl px-6 pt-20 pb-24 grid md:grid-cols-2 gap-10 items-center">
           <div className="space-y-6">
             <Badge variant="secondary" className="rounded-full">Invoice Maker</Badge>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight tracking-tight">
@@ -47,6 +47,14 @@ export default function Home() {
               <Button size="lg" variant="outline" asChild>
                 <Link href="#demo">See a live demo</Link>
               </Button>
+            </div>
+            <div className="flex items-center gap-6 pt-2 text-sm text-muted-foreground">
+              <div className="flex -space-x-3">
+                <Image src="/next.svg" alt="avatar" width={28} height={28} className="rounded-full border bg-background p-1" />
+                <Image src="/vercel.svg" alt="avatar" width={28} height={28} className="rounded-full border bg-background p-1" />
+                <div className="size-7 rounded-full border bg-muted grid place-items-center text-[10px]">+9k</div>
+              </div>
+              <span>Trusted by freelancers and startups</span>
             </div>
           </div>
 
@@ -64,8 +72,8 @@ export default function Home() {
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground">FROM</p>
-                    <p className="font-medium">In-Voice LLC</p>
-                    <p className="text-sm text-muted-foreground">hello@in-voice.dev</p>
+                    <p className="font-medium">QuickBill LLC</p>
+                    <p className="text-sm text-muted-foreground">hello@quickbill.app</p>
                   </div>
                   <div className="text-right space-y-1">
                     <p className="text-xs text-muted-foreground">INVOICE</p>
@@ -128,7 +136,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section id="pricing" className="border-t">
+      <section id="pricing" className="relative border-t">
         <div className="mx-auto max-w-6xl px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
           <div className="space-y-4">
             <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Everything you need to bill smarter</h2>
@@ -161,7 +169,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t">
         <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} In-Voice. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} QuickBill. All rights reserved.</p>
           <div className="flex items-center gap-4 text-sm">
             <Link href="#" className="hover:underline">Privacy</Link>
             <Link href="#" className="hover:underline">Terms</Link>
