@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { X, LogOut } from "lucide-react";
 import { SidebarNav } from "./sidebar-nav";
@@ -31,17 +32,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b">
-            <Link href="/" className="flex items-center gap-2" onClick={onClose}>
-              <div className="size-8 rounded-md bg-primary/10 grid place-items-center">
-                <span className="text-primary font-bold">QB</span>
-              </div>
-              <span className="font-semibold tracking-tight">QuickBill</span>
-            </Link>
+            <Logo 
+              href="/" 
+              size="sm"
+              onClick={onClose}
+              priority={true}
+              className="flex-shrink-0"
+            />
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden ml-2"
               onClick={onClose}
+              aria-label="Close sidebar"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -54,10 +57,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="p-4 border-t">
             <Button
               variant="ghost"
-              className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground hover:bg-muted"
+              className="w-full justify-start gap-3 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950/50"
               onClick={() => {
                 window.location.href = "/";
               }}
+              aria-label="Logout from QuickBill"
             >
               <LogOut className="h-4 w-4" />
               Logout

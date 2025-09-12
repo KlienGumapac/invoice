@@ -22,7 +22,6 @@ export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCreateInvoiceModalOpen, setIsCreateInvoiceModalOpen] = useState(false);
 
-  // Mock data for demonstration
   const summaryData = {
     totalRevenue: 45680.50,
     totalInvoices: 24,
