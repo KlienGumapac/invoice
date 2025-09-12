@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,81 +6,95 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Sidebar } from "@/components/sidebar";
 import { AppHeader } from "@/components/layout/app-header";
-import { CreateInvoiceModal } from "./modals/create-invoice-modal";
 import { 
   Plus, 
+  Users, 
+  UserPlus, 
   DollarSign, 
-  FileText, 
-  TrendingUp, 
-  Clock,
+  FileText,
   Eye,
-  Download,
-  MoreHorizontal
+  Edit,
+  MoreHorizontal,
+  Mail,
+  Phone,
+  MapPin,
+  Download
 } from "lucide-react";
 
-export default function DashboardPage() {
+export default function ClientsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isCreateInvoiceModalOpen, setIsCreateInvoiceModalOpen] = useState(false);
 
-  // Mock data for demonstration
   const summaryData = {
+    totalClients: 24,
+    activeClients: 18,
     totalRevenue: 45680.50,
-    totalInvoices: 24,
-    pendingInvoices: 8,
-    paidInvoices: 16
+    averageOrderValue: 1903.35
   };
 
-  const invoiceHistory = [
+  const clientsData = [
     {
-      id: "INV-001",
-      client: "Acme Corporation",
-      amount: 2500.00,
-      status: "paid",
-      date: "2024-01-15",
-      dueDate: "2024-02-15"
+      id: "CLI-001",
+      name: "Acme Corporation",
+      email: "contact@acme.com",
+      phone: "+1 (555) 123-4567",
+      location: "New York, NY",
+      status: "active",
+      totalInvoices: 12,
+      totalSpent: 25000.00,
+      lastInvoice: "2024-01-15"
     },
     {
-      id: "INV-002", 
-      client: "Tech Solutions Inc",
-      amount: 1800.00,
-      status: "pending",
-      date: "2024-01-20",
-      dueDate: "2024-02-20"
+      id: "CLI-002",
+      name: "Tech Solutions Inc",
+      email: "hello@techsolutions.com",
+      phone: "+1 (555) 987-6543",
+      location: "San Francisco, CA",
+      status: "active",
+      totalInvoices: 8,
+      totalSpent: 18000.00,
+      lastInvoice: "2024-01-20"
     },
     {
-      id: "INV-003",
-      client: "Design Studio LLC",
-      amount: 3200.00,
-      status: "paid",
-      date: "2024-01-18",
-      dueDate: "2024-02-18"
+      id: "CLI-003",
+      name: "Design Studio LLC",
+      email: "info@designstudio.com",
+      phone: "+1 (555) 456-7890",
+      location: "Los Angeles, CA",
+      status: "active",
+      totalInvoices: 15,
+      totalSpent: 32000.00,
+      lastInvoice: "2024-01-18"
     },
     {
-      id: "INV-004",
-      client: "Marketing Agency",
-      amount: 950.00,
-      status: "overdue",
-      date: "2024-01-10",
-      dueDate: "2024-01-25"
+      id: "CLI-004",
+      name: "Marketing Agency",
+      email: "team@marketing.com",
+      phone: "+1 (555) 321-0987",
+      location: "Chicago, IL",
+      status: "inactive",
+      totalInvoices: 3,
+      totalSpent: 4500.00,
+      lastInvoice: "2023-12-10"
     },
     {
-      id: "INV-005",
-      client: "Consulting Firm",
-      amount: 4200.00,
-      status: "paid",
-      date: "2024-01-22",
-      dueDate: "2024-02-22"
+      id: "CLI-005",
+      name: "Consulting Firm",
+      email: "contact@consulting.com",
+      phone: "+1 (555) 654-3210",
+      location: "Boston, MA",
+      status: "active",
+      totalInvoices: 6,
+      totalSpent: 12000.00,
+      lastInvoice: "2024-01-22"
     }
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "paid":
+      case "active":
         return "bg-emerald-100 text-emerald-800 border-emerald-200";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "overdue":
-        return "bg-red-100 text-red-800 border-red-200";
+      case "inactive":
+        return "bg-gray-100 text-gray-800 border-gray-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
     }
@@ -110,7 +124,7 @@ export default function DashboardPage() {
       <div className="md:ml-64">
         {/* Header */}
         <AppHeader
-          title="Dashboard"
+          title="Clients"
           onSidebarToggle={() => setSidebarOpen(true)}
           secondaryAction={{
             label: "Export",
@@ -125,117 +139,122 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{summaryData.totalClients}</div>
+                <p className="text-xs text-muted-foreground">
+                  +3 from last month
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
+                <UserPlus className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{summaryData.activeClients}</div>
+                <p className="text-xs text-muted-foreground">
+                  75% of total clients
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{formatCurrency(summaryData.totalRevenue)}</div>
                 <p className="text-xs text-muted-foreground">
-                  +20.1% from last month
+                  +15.2% from last month
                 </p>
               </CardContent>
             </Card>
 
             <Card className="shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
+                <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
                 <FileText className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{summaryData.totalInvoices}</div>
+                <div className="text-2xl font-bold">{formatCurrency(summaryData.averageOrderValue)}</div>
                 <p className="text-xs text-muted-foreground">
-                  +2 from last month
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{summaryData.pendingInvoices}</div>
-                <p className="text-xs text-muted-foreground">
-                  Awaiting payment
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Paid Invoices</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{summaryData.paidInvoices}</div>
-                <p className="text-xs text-muted-foreground">
-                  66.7% success rate
+                  Per client
                 </p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Invoice History Section */}
+          {/* Clients Section */}
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight">Recent Invoices</h2>
-                <p className="text-muted-foreground">Manage and track your invoices</p>
+                <h2 className="text-2xl font-semibold tracking-tight">All Clients</h2>
+                <p className="text-muted-foreground">Manage your client relationships</p>
               </div>
-              <Button 
-                className="w-full sm:w-auto"
-                onClick={() => setIsCreateInvoiceModalOpen(true)}
-              >
+              <Button className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-2" />
-                Create New Invoice
+                Add New Client
               </Button>
             </div>
 
-            {/* Desktop Invoice List - Table-like layout */}
+            {/* Desktop Clients List - Table-like layout */}
             <Card className="shadow-sm hidden md:block">
               <CardContent className="p-0">
                 {/* Header Row */}
                 <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b bg-muted/30 text-sm font-medium text-muted-foreground">
-                  <div className="col-span-3">Invoice</div>
                   <div className="col-span-3">Client</div>
-                  <div className="col-span-2">Amount</div>
-                  <div className="col-span-2">Status</div>
+                  <div className="col-span-2">Contact</div>
+                  <div className="col-span-2">Location</div>
+                  <div className="col-span-2">Total Spent</div>
+                  <div className="col-span-1">Status</div>
                   <div className="col-span-2">Actions</div>
                 </div>
 
-                {/* Invoice Rows */}
-                {invoiceHistory.map((invoice, index) => (
+                {/* Client Rows */}
+                {clientsData.map((client, index) => (
                   <div 
-                    key={invoice.id} 
+                    key={client.id} 
                     className={`grid grid-cols-12 gap-4 px-6 py-4 hover:bg-muted/50 transition-colors ${
-                      index !== invoiceHistory.length - 1 ? 'border-b' : ''
+                      index !== clientsData.length - 1 ? 'border-b' : ''
                     }`}
                   >
                     <div className="col-span-3">
-                      <div className="font-medium">{invoice.id}</div>
+                      <div className="font-medium">{client.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        {formatDate(invoice.date)}
-                      </div>
-                    </div>
-                    
-                    <div className="col-span-3">
-                      <div className="font-medium">{invoice.client}</div>
-                      <div className="text-sm text-muted-foreground">
-                        Due {formatDate(invoice.dueDate)}
+                        {client.id} • {client.totalInvoices} invoices
                       </div>
                     </div>
                     
                     <div className="col-span-2">
-                      <div className="font-semibold">{formatCurrency(invoice.amount)}</div>
+                      <div className="text-sm font-medium">{client.email}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {client.phone}
+                      </div>
                     </div>
                     
                     <div className="col-span-2">
+                      <div className="text-sm">{client.location}</div>
+                    </div>
+                    
+                    <div className="col-span-2">
+                      <div className="font-semibold">{formatCurrency(client.totalSpent)}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Last: {formatDate(client.lastInvoice)}
+                      </div>
+                    </div>
+                    
+                    <div className="col-span-1">
                       <Badge 
                         variant="outline" 
-                        className={`${getStatusColor(invoice.status)} border`}
+                        className={`${getStatusColor(client.status)} border text-xs`}
                       >
-                        {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                        {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
                       </Badge>
                     </div>
                     
@@ -245,7 +264,7 @@ export default function DashboardPage() {
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="sm">
-                          <Download className="h-4 w-4" />
+                          <Edit className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="sm">
                           <MoreHorizontal className="h-4 w-4" />
@@ -257,36 +276,52 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            {/* Mobile Invoice List - Simplified layout */}
+            {/* Mobile Clients List - Simplified layout */}
             <div className="md:hidden space-y-3">
-              {invoiceHistory.map((invoice, index) => (
-                <Card key={invoice.id} className="shadow-sm">
+              {clientsData.map((client, index) => (
+                <Card key={client.id} className="shadow-sm">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-lg truncate">{invoice.client}</div>
-                        <div className="text-sm text-muted-foreground">{invoice.id}</div>
+                        <div className="font-medium text-lg truncate">{client.name}</div>
+                        <div className="text-sm text-muted-foreground">{client.id}</div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="font-semibold text-lg">{formatCurrency(invoice.amount)}</div>
+                        <div className="font-semibold text-lg">{formatCurrency(client.totalSpent)}</div>
                         <Badge 
                           variant="outline" 
-                          className={`${getStatusColor(invoice.status)} border text-xs`}
+                          className={`${getStatusColor(client.status)} border text-xs`}
                         >
-                          {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                          {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
                         </Badge>
                       </div>
                     </div>
+                    
+                    <div className="mt-3 space-y-1">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Mail className="h-3 w-3" />
+                        <span className="truncate">{client.email}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Phone className="h-3 w-3" />
+                        <span>{client.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="h-3 w-3" />
+                        <span>{client.location}</span>
+                      </div>
+                    </div>
+                    
                     <div className="flex items-center justify-between mt-3 pt-3 border-t">
                       <div className="text-xs text-muted-foreground">
-                        {formatDate(invoice.date)} • Due {formatDate(invoice.dueDate)}
+                        {client.totalInvoices} invoices • Last: {formatDate(client.lastInvoice)}
                       </div>
                       <div className="flex items-center gap-1">
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <Download className="h-4 w-4" />
+                          <Edit className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                           <MoreHorizontal className="h-4 w-4" />
@@ -298,18 +333,18 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Empty State (if no invoices) */}
-            {invoiceHistory.length === 0 && (
+            {/* Empty State (if no clients) */}
+            {clientsData.length === 0 && (
               <Card className="shadow-sm">
                 <CardContent className="flex flex-col items-center justify-center py-12">
-                  <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No invoices yet</h3>
+                  <Users className="h-12 w-12 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No clients yet</h3>
                   <p className="text-muted-foreground text-center mb-6">
-                    Create your first invoice to get started with QuickBill
+                    Add your first client to start managing relationships
                   </p>
-                  <Button onClick={() => setIsCreateInvoiceModalOpen(true)}>
+                  <Button>
                     <Plus className="h-4 w-4 mr-2" />
-                    Create Your First Invoice
+                    Add Your First Client
                   </Button>
                 </CardContent>
               </Card>
@@ -317,12 +352,6 @@ export default function DashboardPage() {
           </div>
         </main>
       </div>
-
-      {/* Create Invoice Modal */}
-      <CreateInvoiceModal
-        isOpen={isCreateInvoiceModalOpen}
-        onClose={() => setIsCreateInvoiceModalOpen(false)}
-      />
     </div>
   );
 }
