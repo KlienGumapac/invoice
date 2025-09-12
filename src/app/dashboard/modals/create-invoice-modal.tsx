@@ -14,7 +14,9 @@ import {
   CreditCard, 
   Check,
   Calculator,
-  FileText
+  FileText,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 
 interface CreateInvoiceModalProps {
@@ -58,6 +60,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
   ]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isPaid, setIsPaid] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   const clients = [
     { id: "1", name: "Acme Corporation", email: "contact@acme.com" },
@@ -152,25 +155,123 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
 
   if (!isOpen) return null;
 
+  const SummaryContent = () => (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Calculator className="h-5 w-5" />
+          Invoice Summary
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span>Subtotal</span>
+            <span>{formatCurrency(subtotal)}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span>Total Discount</span>
+            <span className="text-red-500">-{formatCurrency(totalDiscount)}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span>Total Tax</span>
+            <span className="text-blue-500">+{formatCurrency(totalTax)}</span>
+          </div>
+          <div className="border-t pt-2">
+            <div className="flex justify-between font-semibold">
+              <span>Total Amount</span>
+              <span>{formatCurrency(totalAmount)}</span>
+            </div>
+          </div>
+        </div>
+
+        {payments.length > 0 && (
+          <div className="space-y-2">
+            <div className="border-t pt-4">
+              <h4 className="font-medium mb-2">Payments</h4>
+              {payments.map((payment, index) => (
+                <div key={payment.id} className="flex justify-between text-sm">
+                  <span>{payment.type}</span>
+                  <span>{formatCurrency(payment.amount)}</span>
+                </div>
+              ))}
+              <div className="border-t pt-2">
+                <div className="flex justify-between font-medium">
+                  <span>Total Paid</span>
+                  <span>{formatCurrency(totalPayments)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="border-t pt-4">
+          <div className="flex justify-between text-lg font-bold">
+            <span>Balance</span>
+            <span className={balance === 0 ? "text-emerald-500" : balance > 0 ? "text-red-500" : "text-blue-500"}>
+              {formatCurrency(balance)}
+            </span>
+          </div>
+          {balance === 0 && (
+            <Badge className="w-full justify-center mt-2 bg-emerald-100 text-emerald-800">
+              <Check className="h-3 w-3 mr-1" />
+              Fully Paid
+            </Badge>
+          )}
+        </div>
+
+        <div className="space-y-2 pt-4">
+          <Button className="w-full" size="lg">
+            <FileText className="h-4 w-4 mr-2" />
+            Create Invoice
+          </Button>
+          <Button variant="outline" className="w-full" onClick={onClose}>
+            Cancel
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-background rounded-lg shadow-lg w-full max-w-6xl max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-2 sm:p-4">
+      <div className="bg-background rounded-lg shadow-lg w-full max-w-6xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b">
           <div>
-            <h2 className="text-2xl font-semibold">Create New Invoice</h2>
-            <p className="text-muted-foreground">Fill in the details to create a new invoice</p>
+            <h2 className="text-xl sm:text-2xl font-semibold">Create New Invoice</h2>
+            <p className="text-muted-foreground text-sm sm:text-base">Fill in the details to create a new invoice</p>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="flex h-[calc(90vh-120px)]">
+        {/* Mobile Summary Toggle */}
+        <div className="lg:hidden border-b">
+          <Button
+            variant="ghost"
+            className="w-full justify-between p-4"
+            onClick={() => setShowSummary(!showSummary)}
+          >
+            <span className="flex items-center gap-2">
+              <Calculator className="h-4 w-4" />
+              Invoice Summary - {formatCurrency(totalAmount)}
+            </span>
+            {showSummary ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </Button>
+          {showSummary && (
+            <div className="p-4 bg-muted/30">
+              <SummaryContent />
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col lg:flex-row h-[calc(95vh-120px)] sm:h-[calc(90vh-120px)]">
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="flex-1 min-h-0">
             <ScrollArea className="h-full">
-              <div className="p-6 space-y-6">
+              <div className="p-4 sm:p-6 space-y-6">
                 {/* Client Selection */}
                 <Card>
                   <CardHeader>
@@ -184,7 +285,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                         id="client"
                         value={selectedClient}
                         onChange={(e) => setSelectedClient(e.target.value)}
-                        className="w-full p-2 border rounded-md"
+                        className="w-full p-2 border rounded-md text-sm sm:text-base"
                       >
                         <option value="">Choose a client...</option>
                         {clients.map(client => (
@@ -200,12 +301,12 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 {/* Items Section */}
                 <Card>
                   <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
                         <CardTitle className="text-lg">Invoice Items</CardTitle>
                         <CardDescription>Add items to include in this invoice</CardDescription>
                       </div>
-                      <Button onClick={addItem} size="sm">
+                      <Button onClick={addItem} size="sm" className="w-full sm:w-auto">
                         <Plus className="h-4 w-4 mr-2" />
                         Add Item
                       </Button>
@@ -213,7 +314,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {items.map((item, index) => (
-                      <div key={item.id} className="border rounded-lg p-4 space-y-4">
+                      <div key={item.id} className="border rounded-lg p-3 sm:p-4 space-y-4">
                         <div className="flex items-center justify-between">
                           <h4 className="font-medium">Item {index + 1}</h4>
                           {items.length > 1 && (
@@ -228,7 +329,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                           )}
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor={`item-name-${item.id}`}>Item Name</Label>
                             <Input
@@ -250,7 +351,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor={`item-quantity-${item.id}`}>Quantity</Label>
                             <Input
@@ -286,7 +387,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label>Time Period</Label>
                             <div className="flex gap-2">
@@ -300,7 +401,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                               <select
                                 value={item.timeType}
                                 onChange={(e) => updateItem(item.id, 'timeType', e.target.value as 'days' | 'hours')}
-                                className="px-3 py-2 border rounded-md"
+                                className="px-3 py-2 border rounded-md text-sm"
                               >
                                 <option value="days">Days</option>
                                 <option value="hours">Hours</option>
@@ -329,12 +430,12 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                 {/* Payments Section */}
                 <Card>
                   <CardHeader>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
                         <CardTitle className="text-lg">Payments</CardTitle>
                         <CardDescription>Add payment methods and amounts</CardDescription>
                       </div>
-                      <Button onClick={addPayment} size="sm">
+                      <Button onClick={addPayment} size="sm" className="w-full sm:w-auto">
                         <Plus className="h-4 w-4 mr-2" />
                         Add Payment
                       </Button>
@@ -342,7 +443,7 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {payments.map((payment, index) => (
-                      <div key={payment.id} className="border rounded-lg p-4">
+                      <div key={payment.id} className="border rounded-lg p-3 sm:p-4">
                         <div className="flex items-center justify-between mb-4">
                           <h4 className="font-medium">Payment {index + 1}</h4>
                           <Button
@@ -355,13 +456,13 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                           </Button>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="space-y-2">
                             <Label>Payment Type</Label>
                             <select
                               value={payment.type}
                               onChange={(e) => updatePayment(payment.id, 'type', e.target.value)}
-                              className="w-full p-2 border rounded-md"
+                              className="w-full p-2 border rounded-md text-sm"
                             >
                               <option value="Credit Card">Credit Card</option>
                               <option value="Bank Transfer">Bank Transfer</option>
@@ -410,89 +511,26 @@ export function CreateInvoiceModal({ isOpen, onClose }: CreateInvoiceModalProps)
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Mobile Action Buttons */}
+                <div className="lg:hidden space-y-2">
+                  <Button className="w-full" size="lg">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Create Invoice
+                  </Button>
+                  <Button variant="outline" className="w-full" onClick={onClose}>
+                    Cancel
+                  </Button>
+                </div>
               </div>
             </ScrollArea>
           </div>
 
-          {/* Summary Sidebar */}
-          <div className="w-80 border-l bg-muted/30">
+          {/* Desktop Summary Sidebar */}
+          <div className="hidden lg:block w-80 border-l bg-muted/30">
             <ScrollArea className="h-full">
               <div className="p-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Calculator className="h-5 w-5" />
-                      Invoice Summary
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Subtotal</span>
-                        <span>{formatCurrency(subtotal)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>Total Discount</span>
-                        <span className="text-red-500">-{formatCurrency(totalDiscount)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>Total Tax</span>
-                        <span className="text-blue-500">+{formatCurrency(totalTax)}</span>
-                      </div>
-                      <div className="border-t pt-2">
-                        <div className="flex justify-between font-semibold">
-                          <span>Total Amount</span>
-                          <span>{formatCurrency(totalAmount)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {payments.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="border-t pt-4">
-                          <h4 className="font-medium mb-2">Payments</h4>
-                          {payments.map((payment, index) => (
-                            <div key={payment.id} className="flex justify-between text-sm">
-                              <span>{payment.type}</span>
-                              <span>{formatCurrency(payment.amount)}</span>
-                            </div>
-                          ))}
-                          <div className="border-t pt-2">
-                            <div className="flex justify-between font-medium">
-                              <span>Total Paid</span>
-                              <span>{formatCurrency(totalPayments)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="border-t pt-4">
-                      <div className="flex justify-between text-lg font-bold">
-                        <span>Balance</span>
-                        <span className={balance === 0 ? "text-emerald-500" : balance > 0 ? "text-red-500" : "text-blue-500"}>
-                          {formatCurrency(balance)}
-                        </span>
-                      </div>
-                      {balance === 0 && (
-                        <Badge className="w-full justify-center mt-2 bg-emerald-100 text-emerald-800">
-                          <Check className="h-3 w-3 mr-1" />
-                          Fully Paid
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className="space-y-2 pt-4">
-                      <Button className="w-full" size="lg">
-                        <FileText className="h-4 w-4 mr-2" />
-                        Create Invoice
-                      </Button>
-                      <Button variant="outline" className="w-full" onClick={onClose}>
-                        Cancel
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <SummaryContent />
               </div>
             </ScrollArea>
           </div>

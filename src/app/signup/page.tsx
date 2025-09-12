@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/common";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -56,6 +57,14 @@ export default function SignupPage() {
       {/* Signup Form */}
       <section className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6">
         <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <Logo 
+              href="/" 
+              size="md"
+              className="mx-auto mb-4"
+            />
+          </div>
+          
           <Card className="shadow-sm">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-semibold tracking-tight">Create your account</CardTitle>

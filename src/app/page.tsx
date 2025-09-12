@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/common";
 
 export default function Home() {
   return (
@@ -9,12 +10,12 @@ export default function Home() {
       {/* Navbar */}
       <header className="sticky top-0 z-50 border-b bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="size-8 rounded-md bg-primary/10 grid place-items-center">
-              <span className="text-primary font-bold">QB</span>
-            </div>
-            <span className="font-semibold tracking-tight">QuickBill</span>
-          </Link>
+          <Logo 
+            href="/" 
+            size="sm"
+            priority={true}
+            className="flex-shrink-0"
+          />
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <Link href="#features" className="hover:text-foreground transition-colors">Features</Link>
             <Link href="#how-it-works" className="hover:text-foreground transition-colors">How it works</Link>
